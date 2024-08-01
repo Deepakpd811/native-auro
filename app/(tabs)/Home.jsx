@@ -1,21 +1,41 @@
-import { View, Text, FlatList, Image } from "react-native";
-import React from "react";
+import { View, Text, FlatList, Image, Alert, RefreshControl } from "react-native";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../../constants";
 import SearchInput from "../Components/SearchInput";
 import Trending from "../Components/Trending";
 import EmptyState from "../Components/EmptyState";
+import useAppwrite from "../../lib/useAppwrite";
+import { getAllPosts, getLatestPosts } from "../../lib/appwrite";
+import VidioCards from "../Components/VidioCards";
+
+;
 
 const Home = () => {
+  const [refreshing, setRefreshing] = useState(false);
+  const {data:posts,refetch,isLoading} = useAppwrite(getAllPosts);
+  const {data:latestpost} = useAppwrite(getLatestPosts);
+
+  // console.log(latestpost)
+  const onRefresh = async ()=>{
+    setRefreshing(true);
+    await refetch()
+    setRefreshing(false);
+  }
+  
+  // console.log(posts)
+
   return (
-    <SafeAreaView className="bg-[#161622]">
+    <SafeAreaView className="bg-[#161623]">
       <FlatList
         className=" h-full"
-        data={[{ id: 1 }, { id: 2 }, { id: 3 }]}
+        data={posts}
         // data={[]}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.$id}
         renderItem={({ item }) => (
-          <Text className=" text-3xl text-white ">{item.id}</Text>
+          
+          <VidioCards video={item}/>
+
         )}
         ListHeaderComponent={() => (
           <View className="my-3 px-4 space-y-6">
@@ -43,7 +63,7 @@ const Home = () => {
                 Latest Videos
               </Text>
 
-              <Trending posts={[{id:1},{id:2},{id:3}] ?? []}/>
+              <Trending latestposts={latestpost ?? []}/>
 
             </View>
           </View>
@@ -51,6 +71,8 @@ const Home = () => {
         ListEmptyComponent={()=>(
           <EmptyState title="No vedios " subtitle="be the first to upload"/>
         )}
+
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh}/>}
       />
     </SafeAreaView>
   );

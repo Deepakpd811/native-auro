@@ -12,10 +12,12 @@ export default function App(){
     
 
     // if(!isLogedIn && !isLoading) return <Redirect href="Home"/>
-    if(!false && !false) return <Redirect href="Home"/>
+    // if(!false && !false) return <Redirect href="Home"/>
+    // console.log(isLogedIn)
+    // console.log(isLoading)
    
 
-    // if(!isLoading &&!isLogedIn) return Redirect('/Home')
+    if(!isLoading && !isLogedIn) return Redirect('/Home')
   
   return (
     <SafeAreaView className="bg-black h-full" >

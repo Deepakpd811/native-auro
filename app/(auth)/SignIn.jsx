@@ -28,7 +28,7 @@ const SignIn = () => {
     
       await signIn(form.email, form.password);
 
-      const res = getCurrentUser();
+      const res = await getCurrentUser();
 
       setUser(res);
       setIsLogedIn(true);
@@ -44,7 +44,7 @@ const SignIn = () => {
       setSubmitting(false);
     }
 
-    console.log("done")
+    // console.log("done")
   };
 
   return (
